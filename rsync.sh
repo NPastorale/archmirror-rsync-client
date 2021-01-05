@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPTIONS="-rtlH -4 --safe-links --delete-after --delay-updates --exclude=lastsync"
+OPTIONS="-rtlhH4 --stats --no-motd --safe-links --delete-after --delay-updates --exclude=lastsync"
 SOURCE_LASTUPDATE=0
 SOURCE_LASTUPDATE_PREVIOUS=0
 DESTINATION=/data/
