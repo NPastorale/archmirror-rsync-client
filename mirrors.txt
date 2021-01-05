@@ -8,7 +8,6 @@ mirror.csclub.uwaterloo.ca/archlinux/
 mirrors.dotsrc.org/archlinux/
 mirror.f4st.host/archlinux/
 mirror.fsmg.org.nz/archlinux/
-archlinux.ip-connect.vn.ua/
 mirrors.edge.kernel.org/archlinux/
 mirrors.lug.mtu.edu/archlinux/
 mirror.neuf.no/archlinux/
