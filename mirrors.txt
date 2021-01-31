@@ -1,4 +1,3 @@
-ftp.acc.umu.se/mirror/archlinux/
 pkg.adfinis.com/archlinux/
 archlinux.za.mirror.allworldit.com/archlinux/
 archlinux.uk.mirror.allworldit.com/archlinux/
