@@ -49,7 +49,8 @@ while true; do
 
 	date +%s > "${DESTINATION}lastsync"
 	echo "Finished $(date)"
-	echo "Next sync on $(date --date='+55 minutes')"
+	echo -n "Next sync on "
+	date -d@"$(( `date +%s`+3300))"
 	sleep 55m
 done
 
