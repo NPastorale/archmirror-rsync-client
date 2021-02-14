@@ -48,7 +48,7 @@ while true; do
 	fi
 
 	date +%s > "${DESTINATION}lastsync"
-	echo "Started $(date)"
+	echo "Finished $(date)"
 	echo "Next sync on $(date --date='+55 minutes')"
 	sleep 55m
 done
