@@ -1,14 +1,11 @@
 pkg.adfinis.com/archlinux/
 archlinux.za.mirror.allworldit.com/archlinux/
 archlinux.uk.mirror.allworldit.com/archlinux/
-archimonde.ts.si/archlinux/
 mirrors.atviras.lt/archlinux/
 mirror.csclub.uwaterloo.ca/archlinux/
 mirrors.dotsrc.org/archlinux/
 mirror.f4st.host/archlinux/
 mirror.fsmg.org.nz/archlinux/
-mirrors.edge.kernel.org/archlinux/
-mirrors.lug.mtu.edu/archlinux/
 mirror.neuf.no/archlinux/
 mirrors.ocf.berkeley.edu/archlinux/
 mirror.one.com/archlinux/
