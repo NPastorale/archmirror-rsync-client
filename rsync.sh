@@ -14,6 +14,7 @@ fi
 while true; do
 
 	STARTTIME=$(date +%s)
+	echo "Started $(date)"
 
 	while read p; do
 		SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
@@ -47,7 +48,8 @@ while true; do
 	fi
 
 	date +%s > "${DESTINATION}lastsync"
-	echo "Sleeping 55 minutes"
+	echo "Started $(date)"
+	echo "Next sync on $(date --date='+55 minutes')"
 	sleep 55m
 done
 
