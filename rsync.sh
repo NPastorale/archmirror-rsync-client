@@ -11,48 +11,44 @@ then
 	echo "Priming lastupdate"
 fi
 
-while true; do
+STARTTIME=$(date +%s)
+echo "Started $(date)"
 
-	STARTTIME=$(date +%s)
-	echo "Started $(date)"
+while read p; do
+	SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
+	echo "Checking $(echo $p | cut -f1 -d"/"), last update was on $(date -Iseconds -d @${SOURCE_LASTUPDATE})"
+	if [ $SOURCE_LASTUPDATE -gt $SOURCE_LASTUPDATE_PREVIOUS ] && [ $SOURCE_LASTUPDATE -gt 0 ] ; then
+		SOURCE_SECOND_BEST=$SOURCE
+		SOURCE=$p
+		SOURCE_LASTUPDATE_PREVIOUS=$SOURCE_LASTUPDATE
+	fi
+done < /mirrors.txt
 
-	while read p; do
-		SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
-		echo "Checking $(echo $p | cut -f1 -d"/"), last update was on $(date -Iseconds -d @${SOURCE_LASTUPDATE})"
-		if [ $SOURCE_LASTUPDATE -gt $SOURCE_LASTUPDATE_PREVIOUS ] && [ $SOURCE_LASTUPDATE -gt 0 ] ; then
-			SOURCE_SECOND_BEST=$SOURCE
-			SOURCE=$p
-			SOURCE_LASTUPDATE_PREVIOUS=$SOURCE_LASTUPDATE
-		fi
-	done < /mirrors.txt
+if [ $(cat ${DESTINATION}lastupdate) -lt $SOURCE_LASTUPDATE ]
+then
+	echo "Starting sync. Using $(echo $SOURCE | cut -f1 -d"/") as primary, $(echo $SOURCE_SECOND_BEST | cut -f1 -d"/") as backup"
 
-	if [ $(cat ${DESTINATION}lastupdate) -lt $SOURCE_LASTUPDATE ]
+	if ! rsync $OPTIONS rsync://$SOURCE $DESTINATION
 	then
-		echo "Starting sync. Using $(echo $SOURCE | cut -f1 -d"/") as primary, $(echo $SOURCE_SECOND_BEST | cut -f1 -d"/") as backup"
-
-		if ! rsync $OPTIONS rsync://$SOURCE $DESTINATION
+		if ! rsync $OPTIONS rsync://$SOURCE_SECOND_BEST $DESTINATION
 		then
-			if ! rsync $OPTIONS rsync://$SOURCE_SECOND_BEST $DESTINATION
-			then
-				exit 1
-			fi
+			exit 1
 		fi
-
-		ENDTIME=$(date +%s)
-		TOTALTIME=$(($ENDTIME-$STARTTIME))
-		echo "Sync completed, took $(date -u -d @${TOTALTIME} +"%T")"
-	else
-		ENDTIME=$(date +%s)
-		TOTALTIME=$(($ENDTIME-$STARTTIME))
-		echo "No sync necessary, took $(date -u -d @${TOTALTIME} +"%T")"
 	fi
 
-	date +%s > "${DESTINATION}lastsync"
-	echo "Finished $(date)"
-	echo -n "Next sync on "
-	date -d@"$(( `date +%s`+3300))"
-	sleep 55m
-done
+	ENDTIME=$(date +%s)
+	TOTALTIME=$(($ENDTIME-$STARTTIME))
+	echo "Sync completed, took $(date -u -d @${TOTALTIME} +"%T")"
+else
+	ENDTIME=$(date +%s)
+	TOTALTIME=$(($ENDTIME-$STARTTIME))
+	echo "No sync necessary, took $(date -u -d @${TOTALTIME} +"%T")"
+fi
+
+date +%s > "${DESTINATION}lastsync"
+echo "Finished $(date)"
+echo -n "Next sync on "
+date -d@"$(( `date +%s`+3300))"
 
 
 #TODO change echo and add logging capabilities
