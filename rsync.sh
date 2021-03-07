@@ -47,10 +47,7 @@ fi
 
 date +%s > "${DESTINATION}lastsync"
 echo "Finished $(date)"
-echo -n "Next sync on "
-date -d@"$(( `date +%s`+3300))"
 
 
 #TODO change echo and add logging capabilities
-#TODO eliminate the sleep and find some other method of running containers periodically
 #TODO investigate rsync over TLS https://dotsrc.org/mirrors/
