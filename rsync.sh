@@ -14,7 +14,7 @@ fi
 STARTTIME=$(date +%s)
 echo "Started $(date)"
 
-while read p; do
+shuf /mirrors.txt | while read p; do
 	SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
 	echo "$(date -Iseconds -d @${SOURCE_LASTUPDATE}) last update for $(echo $p | cut -f1 -d"/")"
 	if [ $SOURCE_LASTUPDATE -gt $SOURCE_LASTUPDATE_PREVIOUS ] && [ $SOURCE_LASTUPDATE -gt 0 ] ; then
@@ -22,7 +22,7 @@ while read p; do
 		SOURCE=$p
 		SOURCE_LASTUPDATE_PREVIOUS=$SOURCE_LASTUPDATE
 	fi
-done < /mirrors.txt
+done
 
 if [ $(cat ${DESTINATION}lastupdate) -lt $SOURCE_LASTUPDATE ]
 then
