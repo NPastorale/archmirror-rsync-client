@@ -16,7 +16,7 @@ echo "Started $(date)"
 
 while read p; do
 	SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
-	echo "Checking $(echo $p | cut -f1 -d"/"), last update was on $(date -Iseconds -d @${SOURCE_LASTUPDATE})"
+	echo "$(date -Iseconds -d @${SOURCE_LASTUPDATE}) last update for $(echo $p | cut -f1 -d"/")"
 	if [ $SOURCE_LASTUPDATE -gt $SOURCE_LASTUPDATE_PREVIOUS ] && [ $SOURCE_LASTUPDATE -gt 0 ] ; then
 		SOURCE_SECOND_BEST=$SOURCE
 		SOURCE=$p
