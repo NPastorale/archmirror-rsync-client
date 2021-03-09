@@ -24,7 +24,7 @@ while read p; do
 		SOURCE=$p
 		SOURCE_LASTUPDATE_PREVIOUS=$SOURCE_LASTUPDATE
 	fi
-done < /$MIRRORS_FILE
+done < $MIRRORS_FILE
 
 if [ $(cat ${DESTINATION}lastupdate) -lt $SOURCE_LASTUPDATE ]
 then
