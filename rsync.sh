@@ -4,6 +4,7 @@ OPTIONS="-rtlhH4 --stats --no-motd --safe-links --delete-after --delay-updates -
 SOURCE_LASTUPDATE=0
 SOURCE_LASTUPDATE_PREVIOUS=0
 DESTINATION=/data/
+MIRRORS_FILE=/mirrors.txt
 
 if [ ! -f ${DESTINATION}lastupdate ]
 then
@@ -14,27 +15,22 @@ fi
 STARTTIME=$(date +%s)
 echo "Started $(date)"
 
-shuf /mirrors.txt | while read p; do
+shuf -o $MIRRORS_FILE $MIRRORS_FILE
+
+while read p; do
 	SOURCE_LASTUPDATE=$(curl -s https://${p}lastupdate)
 	echo "$(date -Iseconds -d @${SOURCE_LASTUPDATE}) last update for $(echo $p | cut -f1 -d"/")"
 	if [ $SOURCE_LASTUPDATE -gt $SOURCE_LASTUPDATE_PREVIOUS ] && [ $SOURCE_LASTUPDATE -gt 0 ] ; then
-		SOURCE_SECOND_BEST=$SOURCE
 		SOURCE=$p
 		SOURCE_LASTUPDATE_PREVIOUS=$SOURCE_LASTUPDATE
 	fi
-done
+done < /$MIRRORS_FILE
 
 if [ $(cat ${DESTINATION}lastupdate) -lt $SOURCE_LASTUPDATE ]
 then
-	echo "Starting sync. Using $(echo $SOURCE | cut -f1 -d"/") as primary, $(echo $SOURCE_SECOND_BEST | cut -f1 -d"/") as backup"
+	echo "Syncing with $(echo $SOURCE | cut -f1 -d"/")"
 
-	if ! rsync $OPTIONS rsync://$SOURCE $DESTINATION
-	then
-		if ! rsync $OPTIONS rsync://$SOURCE_SECOND_BEST $DESTINATION
-		then
-			exit 1
-		fi
-	fi
+	rsync $OPTIONS rsync://$SOURCE $DESTINATION
 
 	ENDTIME=$(date +%s)
 	TOTALTIME=$(($ENDTIME-$STARTTIME))
